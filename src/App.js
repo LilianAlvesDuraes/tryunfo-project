@@ -16,7 +16,7 @@ class App extends React.Component {
     cardSaved: [],
   };
 
-  onSaveButtonClick = ({ target }) => {
+  onInputChange = ({ target }) => {
     const { name, type } = target;
     const value = type === 'checkbox' ? target.checked : target.value;
     this.setState({
@@ -76,7 +76,7 @@ class App extends React.Component {
           <h1>Tryunfo</h1>
         </div>
         <Form
-          onSaveButtonClick={ this.onSaveButtonClick }
+          onInputChange={ this.onInputChange }
           cardName={ cardName }
           cardDescription={ cardDescription }
           cardAttr1={ cardAttr1 }
@@ -90,7 +90,7 @@ class App extends React.Component {
           hasTrunfo={ hasTrunfo }
         />
         <Card
-          onSaveButtonClick={ this.onSaveButtonClick }
+          onInputChange={ this.onInputChange }
           cardName={ cardName }
           cardDescription={ cardDescription }
           cardAttr1={ cardAttr1 }
