@@ -104,9 +104,18 @@ class Form extends React.Component {
         </label>
         <button
           type="button"
-          id="botao"
+          name="button"
           data-testid="save-button"
-          onClick={ onSaveButtonClick }
+          onClick={ () => onSaveButtonClick({
+            cardName,
+            cardDescription,
+            cardAttr1,
+            cardAttr2,
+            cardAttr3,
+            cardImage,
+            cardRare,
+            cardTrunfo,
+          }) }
           disabled={ isSaveButtonDisabled }
         >
           Salvar
