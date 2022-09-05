@@ -16,15 +16,15 @@ class App extends React.Component {
     cardSaved: [],
   };
 
-  handleChange = ({ target }) => {
+  onSaveButtonClick = ({ target }) => {
     const { name, type } = target;
     const value = type === 'checkbox' ? target.checked : target.value;
     this.setState({
       [name]: value,
-    }, () => this.buttonDisabled());
+    }, () => this.isSaveButtonDisabled());
   };
 
-  buttonDisabled = () => {
+  isSaveButtonDisabled = () => {
     const { name, description, image, atrib1, atrib2, atrib3 } = this.state;
     const areaChange = name.length > 0 && description.length > 0 && image.length > 0;
     const atribMax = 90;
@@ -76,7 +76,7 @@ class App extends React.Component {
           <h1>Tryunfo</h1>
         </div>
         <Form
-          handleChange={ this.handleChange }
+          onSaveButtonClick={ this.onSaveButtonClick }
           cardName={ cardName }
           cardDescription={ cardDescription }
           cardAttr1={ cardAttr1 }
@@ -85,12 +85,12 @@ class App extends React.Component {
           cardImage={ cardImage }
           cardRare={ cardRare }
           cardTrunfo={ cardTrunfo }
-          isSaveButtonDisabled={ disabledButton }
+          isSaveisSaveButtonDisabled={ disabledButton }
           handleClick={ this.handleClick }
           hasTrunfo={ hasTrunfo }
         />
         <Card
-          handleChange={ this.handleChange }
+          onSaveButtonClick={ this.onSaveButtonClick }
           cardName={ cardName }
           cardDescription={ cardDescription }
           cardAttr1={ cardAttr1 }
@@ -102,16 +102,16 @@ class App extends React.Component {
         />
         {
           cardSaved
-            .map((elem, i) => (<Card
-              key={ i }
-              cardName={ elem.name }
-              cardDescription={ elem.description }
-              cardAttr1={ elem.atrib1 }
-              cardAttr2={ elem.atrib2 }
-              cardAttr3={ elem.atrib3 }
-              cardImage={ elem.image }
-              cardRare={ elem.rare }
-              cardTrunfo={ elem.trunfo }
+            .map((keyObj) => (<Card
+              key={ keyObj.cardName }
+              cardName={ keyObj.cardName }
+              cardDescription={ keyObj.cardDescription }
+              cardAttr1={ keyObj.cardAttr1 }
+              cardAttr2={ keyObj.cardAttr2 }
+              cardAttr3={ keyObj.cardAttr3 }
+              cardImage={ keyObj.cardImage }
+              cardRare={ keyObj.cardRare }
+              cardTrunfo={ keyObj.cardTrunfo }
             />))
         }
       </>
