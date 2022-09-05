@@ -21,21 +21,32 @@ class App extends React.Component {
     const value = type === 'checkbox' ? target.checked : target.value;
     this.setState({
       [name]: value,
-    }, () => this.isSaveButtonDisabled());
+    }, () => this.isSaveButtonDisabled);
   };
 
   isSaveButtonDisabled = () => {
-    const { name, description, image, atrib1, atrib2, atrib3 } = this.state;
-    const areaChange = name.length > 0 && description.length > 0 && image.length > 0;
-    const atribMax = 90;
-    const sumAtribMax = 210;
-    const verifyAtb1 = Number(atrib1) >= 0 && Number(atrib1) <= atribMax;
-    const verifyAtb2 = Number(atrib2) >= 0 && Number(atrib2) <= atribMax;
-    const verifyAtb3 = Number(atrib3) >= 0 && Number(atrib3) <= atribMax;
-    const resultAtributs = Number(atrib1) + Number(atrib2) + Number(atrib3);
-    const resultSum = resultAtributs <= sumAtribMax;
-    const validation = areaChange && verifyAtb1 && verifyAtb2 && verifyAtb3 && resultSum;
-    this.setState({ disabledButton: !validation });
+    this.setState(({
+      cardName,
+      cardDescription,
+      cardAttr1,
+      cardAttr2,
+      cardAttr3,
+      cardImage,
+    }) => {
+      const areaChang = cardName
+        .length > 0 && cardDescription
+        .length > 0 && cardImage
+        .length > 0;
+      const atribMax = 90;
+      const sumAtribMax = 210;
+      const verifyAtb1 = Number(cardAttr1) >= 0 && Number(cardAttr1) <= atribMax;
+      const verifyAtb2 = Number(cardAttr2) >= 0 && Number(cardAttr2) <= atribMax;
+      const verifyAtb3 = Number(cardAttr3) >= 0 && Number(cardAttr3) <= atribMax;
+      const resultAtributs = Number(cardAttr1) + Number(cardAttr2) + Number(cardAttr3);
+      const resultSum = resultAtributs <= sumAtribMax;
+      const validation = areaChang && verifyAtb1 && verifyAtb2 && verifyAtb3 && resultSum;
+      this.setState({ disabledButton: !validation });
+    });
   };
 
   handleClick = () => {
@@ -85,12 +96,11 @@ class App extends React.Component {
           cardImage={ cardImage }
           cardRare={ cardRare }
           cardTrunfo={ cardTrunfo }
-          isSaveisSaveButtonDisabled={ disabledButton }
-          handleClick={ this.handleClick }
+          isSaveButtonDisabled={ disabledButton }
+          // handleClick={ this.handleClick }
           hasTrunfo={ hasTrunfo }
         />
         <Card
-          onInputChange={ this.onInputChange }
           cardName={ cardName }
           cardDescription={ cardDescription }
           cardAttr1={ cardAttr1 }
@@ -100,7 +110,7 @@ class App extends React.Component {
           cardRare={ cardRare }
           cardTrunfo={ cardTrunfo }
         />
-        {
+        {/* {
           cardSaved
             .map((keyObj) => (<Card
               key={ keyObj.cardName }
@@ -113,7 +123,7 @@ class App extends React.Component {
               cardRare={ keyObj.cardRare }
               cardTrunfo={ keyObj.cardTrunfo }
             />))
-        }
+        } */}
       </>
     );
   }

@@ -103,7 +103,7 @@ class Form extends React.Component {
           {!hasTrunfo ? (
             <input
               type="checkbox"
-              name=""
+              name="cardTrunfo"
               checked={ cardTrunfo }
               id="trunfo"
               data-testid="trunfo-input"
