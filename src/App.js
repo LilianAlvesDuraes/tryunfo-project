@@ -16,6 +16,7 @@ class App extends React.Component {
     hasTrunfo: false,
     cardSaved: [],
     filterName: '',
+    rareFilter: 'todas',
   };
 
   onInputChange = ({ target }) => {
@@ -119,6 +120,7 @@ class App extends React.Component {
       cardSaved,
       hasTrunfo,
       filterName,
+      rareFilter,
     } = this.state;
     return (
       <>
@@ -161,7 +163,12 @@ class App extends React.Component {
         />
         {
           cardSaved
-            .filter((iten) => iten.cardName.includes(filterName))
+            .filter((iten) => {
+              if (rareFilter === 'todas') {
+                return iten.cardName.includes(filterName);
+              }
+              return iten.cardName.includes(filterName) && iten.cardRare === rareFilter;
+            })
             .map((keyObj) => (
               <div key={ keyObj.cardName }>
                 <Card
@@ -192,6 +199,17 @@ class App extends React.Component {
           value={ filterName }
           onChange={ this.onInputChange }
         />
+        <select
+          name="rareFilter"
+          value={ rareFilter }
+          onChange={ this.onInputChange }
+          data-testid="rare-filter"
+        >
+          <option value="todas">todas</option>
+          <option value="normal">normal</option>
+          <option value="raro">raro</option>
+          <option value="muito raro">muito raro</option>
+        </select>
       </>
     );
   }
