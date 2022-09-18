@@ -13,7 +13,9 @@ class App extends React.Component {
     cardRare: 'normal',
     disabledButton: true,
     cardTrunfo: false,
+    hasTrunfo: false,
     cardSaved: [],
+    filterName: '',
   };
 
   onInputChange = ({ target }) => {
@@ -48,9 +50,18 @@ class App extends React.Component {
     this.setState({ disabledButton: !validation });
   };
 
-  handleClick = () => {
-    const { cardSaved, trunfo, hasTrunfo } = this.state;
-    this.setState((previousState) => (
+  handleClick = async ({
+    cardName,
+    cardDescription,
+    cardAttr1,
+    cardAttr2,
+    cardAttr3,
+    cardImage,
+    cardRare,
+    cardTrunfo,
+  }) => {
+    const { cardSaved } = this.state;
+    await this.setState((previousState) => (
       {
         cardName: '',
         cardDescription: '',
@@ -61,9 +72,37 @@ class App extends React.Component {
         cardRare: 'normal',
         disabledButton: true,
         cardTrunfo: false,
-        cardSaved: [...cardSaved, previousState],
-        hasTrunfo: hasTrunfo || trunfo,
-      }));
+        cardSaved: [...previousState.cardSaved, {
+          cardName,
+          cardDescription,
+          cardAttr1,
+          cardAttr2,
+          cardAttr3,
+          cardImage,
+          cardRare,
+          cardTrunfo,
+        }],
+      }), () => {
+      this.setState(() => {
+        const teste = cardSaved.some((item) => item.cardTrunfo === true);
+        return { hasTrunfo: teste };
+      });
+    });
+    // if (!cardTrunfo) {
+    //   this.setState({ hasTrunfo: false });
+    // } else {
+    //   this.setState({ hasTrunfo: true });
+    // }
+  };
+
+  cardDelete = ({ target }) => {
+    const { name } = target;
+    const { cardSaved } = this.state;
+    const cards = cardSaved.filter((iten) => iten.cardName !== name);
+    this.setState({ cardSaved: cards }, () => {
+      this.setState({ hasTrunfo: cardSaved.some((item) => item.cardTrunfo === true) });
+    });
+    // target.parentElement.remove();
   };
 
   render() {
@@ -78,6 +117,8 @@ class App extends React.Component {
       cardTrunfo,
       disabledButton,
       cardSaved,
+      hasTrunfo,
+      filterName,
     } = this.state;
     return (
       <>
@@ -95,9 +136,17 @@ class App extends React.Component {
           cardRare={ cardRare }
           cardTrunfo={ cardTrunfo }
           isSaveButtonDisabled={ disabledButton }
-          handleClick={ this.handleClick }
-          hasTrunfo={ cardSaved.some((item) => item.cardTrunfo) }
-          onSaveButtonClick={ this.handleClick }
+          hasTrunfo={ hasTrunfo }
+          onSaveButtonClick={ () => this.handleClick({
+            cardName,
+            cardDescription,
+            cardAttr1,
+            cardAttr2,
+            cardAttr3,
+            cardImage,
+            cardRare,
+            cardTrunfo,
+          }) }
         />
         <Card
           cardName={ cardName }
@@ -108,21 +157,41 @@ class App extends React.Component {
           cardImage={ cardImage }
           cardRare={ cardRare }
           cardTrunfo={ cardTrunfo }
+          cardDelete={ this.cardDelete }
         />
         {
           cardSaved
-            .map((keyObj) => (<Card
-              key={ keyObj.cardName }
-              cardName={ keyObj.cardName }
-              cardDescription={ keyObj.cardDescription }
-              cardAttr1={ keyObj.cardAttr1 }
-              cardAttr2={ keyObj.cardAttr2 }
-              cardAttr3={ keyObj.cardAttr3 }
-              cardImage={ keyObj.cardImage }
-              cardRare={ keyObj.cardRare }
-              cardTrunfo={ keyObj.cardTrunfo }
-            />))
+            .filter((iten) => iten.cardName.includes(filterName))
+            .map((keyObj) => (
+              <div key={ keyObj.cardName }>
+                <Card
+                  cardName={ keyObj.cardName }
+                  cardDescription={ keyObj.cardDescription }
+                  cardAttr1={ keyObj.cardAttr1 }
+                  cardAttr2={ keyObj.cardAttr2 }
+                  cardAttr3={ keyObj.cardAttr3 }
+                  cardImage={ keyObj.cardImage }
+                  cardRare={ keyObj.cardRare }
+                  cardTrunfo={ keyObj.cardTrunfo }
+                />
+                <button
+                  data-testid="delete-button"
+                  type="button"
+                  onClick={ this.cardDelete }
+                  name={ keyObj.cardName }
+                >
+                  Excluir
+                </button>
+              </div>
+            ))
         }
+        <input
+          type="text"
+          data-testid="name-filter"
+          name="filterName"
+          value={ filterName }
+          onChange={ this.onInputChange }
+        />
       </>
     );
   }
