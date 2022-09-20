@@ -51,7 +51,7 @@ class App extends React.Component {
     this.setState({ disabledButton: !validation });
   };
 
-  handleClick = async ({
+  handleClick = ({
     cardName,
     cardDescription,
     cardAttr1,
@@ -61,8 +61,8 @@ class App extends React.Component {
     cardRare,
     cardTrunfo,
   }) => {
-    const { cardSaved } = this.state;
-    await this.setState((previousState) => (
+    // const { cardSaved } = this.state;
+    this.setState((previousState) => (
       {
         cardName: '',
         cardDescription: '',
@@ -84,24 +84,24 @@ class App extends React.Component {
           cardTrunfo,
         }],
       }), () => {
-      this.setState(() => {
-        const teste = cardSaved.some((item) => item.cardTrunfo === true);
-        return { hasTrunfo: teste };
-      });
+      if (cardTrunfo) {
+        this.setState({ hasTrunfo: true });
+      }
+      // this.setState(() => {
+      //   const teste = cardSaved.some((item) => item.cardTrunfo === true);
+      //   return { hasTrunfo: teste };
+      // });
     });
-    // if (!cardTrunfo) {
-    //   this.setState({ hasTrunfo: false });
-    // } else {
-    //   this.setState({ hasTrunfo: true });
-    // }
   };
 
-  cardDelete = ({ target }) => {
+  cardDelete = ({ target }, cardTrunfo) => {
     const { name } = target;
     const { cardSaved } = this.state;
     const cards = cardSaved.filter((iten) => iten.cardName !== name);
     this.setState({ cardSaved: cards }, () => {
-      this.setState({ hasTrunfo: cardSaved.some((item) => item.cardTrunfo === true) });
+      if (cardTrunfo) {
+        this.setState({ hasTrunfo: false });
+      }
     });
     // target.parentElement.remove();
   };
@@ -184,7 +184,7 @@ class App extends React.Component {
                 <button
                   data-testid="delete-button"
                   type="button"
-                  onClick={ this.cardDelete }
+                  onClick={ (event) => this.cardDelete(event, keyObj.cardTrunfo) }
                   name={ keyObj.cardName }
                 >
                   Excluir
